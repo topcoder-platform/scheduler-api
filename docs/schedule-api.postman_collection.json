@@ -1,0 +1,2910 @@
+{
+	"info": {
+		"_postman_id": "080490d5-b6e4-439c-87ae-dd9fa2b97f76",
+		"name": "schedule-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Fail Case",
+			"item": [
+				{
+					"name": "Invalid json request body",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"a\": \n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unsupported http method",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"a\": 123\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Http resource not found",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/invalid",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"invalid"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Search scheduled tasks",
+			"item": [
+				{
+					"name": "search scheduled tasks 1",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks?page=2&perPage=2&status=ready",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "perPage",
+									"value": "2"
+								},
+								{
+									"key": "status",
+									"value": "ready"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search scheduled tasks 2",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search scheduled tasks 400",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks?status=invalid",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "invalid"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search scheduled tasks expired token 401",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search scheduled tasks no token 401",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search scheduled tasks invalid token 401",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search scheduled tasks not admin 403",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search scheduled tasks incorrect m2m token 403",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Head scheduled tasks",
+			"item": [
+				{
+					"name": "head scheduled tasks 1",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks?page=2&perPage=2&status=ready",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "perPage",
+									"value": "2"
+								},
+								{
+									"key": "status",
+									"value": "ready"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled tasks 2",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled tasks 400",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks?page=-1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled tasks expired token 401",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled tasks no token 401",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled tasks invalid token 401",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer invalid"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled tasks not admin 403",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled tasks incorrect m2m token 403",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create scheduled task",
+			"item": [
+				{
+					"name": "create scheduled task by admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.environment.set(\"id1\", pm.response.json().id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create scheduled task using m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.environment.set(\"id2\", pm.response.json().id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"methodType\": \"GET\",\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create scheduled task 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"invalid\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create scheduled task without token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create scheduled task with invalid token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create scheduled task with expired token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create scheduled task by non-admin user 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create scheduled task using incorrect m2m token 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Get scheduled task",
+			"item": [
+				{
+					"name": "get scheduled task by admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task using m2m token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task 400",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/invalid",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"invalid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task without token 401",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task with invalid token 401",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task with expired token 401",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task by non-admin user 403",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task by incorrect m2m token 403",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get scheduled task 404",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{$guid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{$guid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Head scheduled task",
+			"item": [
+				{
+					"name": "head scheduled task by admin",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task using m2m token",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task 400",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/invalid",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"invalid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task without token 401",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task with invalid token 401",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer invalid"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task with expired token 401",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task by non-admin user 403",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task by incorrect m2m token 403",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "head scheduled task 404",
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{$guid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{$guid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Put scheduled task",
+			"item": [
+				{
+					"name": "put scheduled task by admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Authorization\": \"Bearer test\"\n    },\n    \"methodType\": \"PUT\",\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"running\",\n    \"scheduledTime\": \"2019-09-30T00:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task using m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"methodType\": \"GET\",\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges\",\n    \"scheduledTime\": \"2020-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"GET\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"invalid\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task without token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task with invalid token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer invalid"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task with expired token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task by non-admin user 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task using incorrect m2m token 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Authorization\": \"Bearer test\"\n    },\n    \"methodType\": \"PUT\",\n    \"payload\": {\n      \"key\": \"test\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"running\",\n    \"scheduledTime\": \"2019-09-30T00:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{$guid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{$guid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Patch scheduled task",
+			"item": [
+				{
+					"name": "patch scheduled task by admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"methodType\": \"PATCH\",\n    \"status\": \"completed\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put scheduled task using m2m token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"headers\": {\n        \"Authorization\": \"Bearer test\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch scheduled task 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"GET\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"invalid\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch scheduled task without token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch scheduled task with invalid token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer invalid"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch scheduled task with expired token 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch scheduled task by non-admin user 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch scheduled task using incorrect m2m token 403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Accept\": \"application/json\",\n      \"Content-Type\": \"application/json\"\n    },\n    \"methodType\": \"POST\",\n    \"payload\": {\n      \"key\": \"value\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"ready\",\n    \"scheduledTime\": \"2030-01-01T02:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patch scheduled task 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6131b012-adb8-466d-8c96-7c7bbbc2733b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"headers\": {\n      \"Authorization\": \"Bearer test\"\n    },\n    \"methodType\": \"PUT\",\n    \"payload\": {\n      \"key\": \"test\"\n    },\n    \"endpoint\": \"https://api.topcoder.com/v4/challenges/30102653\",\n    \"status\": \"running\",\n    \"scheduledTime\": \"2019-09-30T00:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{$guid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{$guid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Delete scheduled task",
+			"item": [
+				{
+					"name": "delete scheduled task by admin",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task using m2m token",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mModify_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id2}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task 400",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/invalid",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"invalid"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task without token 401",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task with invalid token 401",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer invalid"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task with expired token 401",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{expired_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task by non-admin user 403",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{user_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task by incorrect m2m token 403",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{m2mRead_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{id1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheduled task 404",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/scheduledTasks/{{$guid}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"scheduledTasks",
+								"{{$guid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
