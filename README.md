@@ -11,7 +11,7 @@
 
 ## Environment Variables
 
-TABLE_NAME: The name of the dynamodb table
+TABLE_NAME: The name of the dynamodb table  
 STATE_MACHINE_ARN: The ARN of the [schedule executor](https://github.com/topcoder-platform/schedule-executor)
 
 ## Deploy
