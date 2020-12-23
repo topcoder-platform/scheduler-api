@@ -1,6 +1,14 @@
-# Schedule API
+# Topcoder AutoPilot - Schedule API
 
 This API is part of the Scheduler Processor -> Schedule API -> Schedule Executor triage of modules. This module is responsible to create the events in AWS Step functions, which are later executed by the [Executor](https://github.com/topcoder-platform/schedule-executor)
+
+## Development status
+
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/topcoder-platform/scheduler-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/topcoder-platform/scheduler-api/alerts/)[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/topcoder-platform/scheduler-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/topcoder-platform/scheduler-api/context:javascript)
+
+### Deployment status
+
+Dev: [![CircleCI](https://circleci.com/gh/topcoder-platform/scheduler-api/tree/develop.svg?style=svg)](https://circleci.com/gh/topcoder-platform/scheduler-api/tree/develop) Prod: [![CircleCI](https://circleci.com/gh/topcoder-platform/scheduler-api/tree/master.svg?style=svg)](https://circleci.com/gh/topcoder-platform/scheduler-api/tree/master)
 
 ## Requirements
 
