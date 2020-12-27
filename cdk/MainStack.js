@@ -48,10 +48,12 @@ class MainStack extends cdk.Stack {
       restApiName: `api`,
     });
 
-    const resource = api.root.addResource('schedule');
-
     const apiLambdaIntegration = new apigateway.LambdaIntegration(submitLambda);
-    resource.addMethod('POST', apiLambdaIntegration);
+    const resource = api.root.addResource('{schedule+}', {
+      defaultIntegration: apiLambdaIntegration,
+    });
+    resource.addMethod('POST');
+    resource.addMethod('GET');
   }
 }
 

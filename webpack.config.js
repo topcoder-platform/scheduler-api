@@ -7,6 +7,9 @@ const webpack = require('webpack');
 
 module.exports = {
   target: 'node',
+  node: {
+    __dirname: false,
+  },
   mode: 'none',
   devtool: false,
   entry: {
@@ -64,6 +67,11 @@ module.exports = {
           configFile: path.resolve(__dirname, './tsconfig.build.json'),
           transpileOnly: true,
         },
+      },
+      {
+        test: /\.ya?ml$/,
+        type: 'json',
+        use: 'yaml-loader',
       },
     ],
   },

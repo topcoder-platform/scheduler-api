@@ -4,6 +4,8 @@
  */
 import { URL } from 'url';
 import AWS from 'aws-sdk';
+// tslint:disable-next-line
+import swagger from '../docs/swagger.yaml';
 import { processAPILambda, randomString } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
 import { BadRequestError } from './errors';
@@ -98,36 +100,70 @@ function _validateInput(body: string | null) {
 }
 
 /**
+ * Submit schedule event.
+ * @param event APIGatewayProxyEvent
+ */
+async function submitEvent(event: APIGatewayProxyEvent) {
+  if (event.isBase64Encoded) {
+    throw new BadRequestError('Binary data not supported.');
+  }
+  const input = _validateInput(event.body);
+  const id = randomString(20);
+  input.id = id;
+  const serialized = JSON.stringify(input);
+
+  await dynamodb
+    .putItem({
+      TableName: getDynamoTableName(),
+      Item: {
+        id: { S: id },
+        input: { S: serialized },
+      },
+    })
+    .promise();
+
+  await sfn
+    .startExecution({
+      name: id,
+      input: serialized,
+      stateMachineArn: getStateMachineARN(),
+    })
+    .promise();
+
+  return { id };
+}
+
+/**
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
-  return await processAPILambda(async () => {
-    if (event.isBase64Encoded) {
-      throw new BadRequestError('Binary data not supported.');
+  if (event.path === '/schedule' && event.httpMethod === 'POST') {
+    return await processAPILambda(async () => submitEvent(event));
+  }
+  if (event.path === '/schedule/docs' && event.httpMethod === 'GET') {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(swagger),
+    };
+  }
+  if (event.path === '/health' && event.httpMethod === 'GET') {
+    try {
+      await dynamodb.scan({ TableName: getDynamoTableName(), Limit: 1 }).promise();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ checksRun: 1 })
+      }
+    }catch (e) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: e.message })
+      }
     }
-    const input = _validateInput(event.body);
-    const id = randomString(20);
-    input.id = id;
-    const serialized = JSON.stringify(input);
-
-    await dynamodb
-      .putItem({
-        TableName: getDynamoTableName(),
-        Item: {
-          id: { S: id },
-          input: { S: serialized },
-        },
-      })
-      .promise();
-
-    await sfn
-      .startExecution({
-        name: id,
-        input: serialized,
-        stateMachineArn: getStateMachineARN(),
-      })
-      .promise();
-
-    return { id };
-  });
+  }
+  return {
+    statusCode: 404,
+    body: JSON.stringify({
+      error: 'The requested resource cannot found.',
+    }),
+  };
 }

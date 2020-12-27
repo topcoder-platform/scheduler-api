@@ -11,16 +11,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-cdk/aws-stepfunctions": "^1.9.0",
     "@aws-cdk/aws-apigateway": "^1.9.0",
     "@aws-cdk/aws-dynamodb": "^1.9.0",
     "@aws-cdk/aws-lambda": "^1.9.0",
+    "@aws-cdk/aws-stepfunctions": "^1.9.0",
     "@aws-cdk/core": "^1.9.0",
     "@types/node": "^12.7.5",
     "aws-sdk": "^2.533.0",
     "ts-loader": "^6.1.2",
     "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^3.3.9",
+    "yaml-loader": "^0.6.0"
   },
   "devDependencies": {
     "tslint": "^6.1.3",
