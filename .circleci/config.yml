@@ -43,7 +43,8 @@ builddeploy_steps: &builddeploy_steps
             ./awsconfiguration.sh $DEPLOY_ENV
             source awsenvconf
             ./buildenv.sh -e $DEPLOY_ENV -b ${LOGICAL_ENV}-${APPNAME}-deployvar
-            source buildenvvar            
+            source buildenvvar   
+            cdk destroy         
             cdk bootstrap
             cdk synth
             cdk deploy
