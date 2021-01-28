@@ -6,27 +6,6 @@ provider:
   runtime: nodejs10.x
   memorySize: 256
   timeout: 10
-  iamRoleStatements:
-    - Effect: 'Allow'
-      Action:
-        - 'lambda:InvokeFunction'
-      Resource: '*'
-    - Effect: 'Allow'
-      Action:
-        - dynamodb:Scan
-        - dynamodb:PutItem
-      Resource:
-        Fn::GetAtt:
-          - SchedulerTable
-          - Arn
-    - Effect: 'Allow'
-      Action:
-        - states:StartExecution
-      Resource: ${env:STATE_MACHINE_ARN}
-    - Effect: Allow
-      Action:
-        - s3:*
-      Resource: "*"
   apiGateway:
     shouldStartNameWithService: true
   lambdaHashingVersion: 20201221
@@ -66,26 +45,3 @@ functions:
       TABLE_NAME: ${env:TABLE_NAME}
       STATE_MACHINE_ARN: ${env:STATE_MACHINE_ARN}
       S3_BUCKET: ${env:S3_BUCKET}
-
-resources:
-  Resources:
-    SchedulerTable:
-      Type: AWS::DynamoDB::Table
-      DeletionPolicy: Retain
-      Properties:
-        TableName: ${env:TABLE_NAME}
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-    S3Bucket:
-      Type: AWS::S3::Bucket
-      DeletionPolicy: Retain
-      Properties:
-        BucketName: ${env:S3_BUCKET}
-        AccessControl: Private
