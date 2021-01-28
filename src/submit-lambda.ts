@@ -4,15 +4,15 @@
  */
 import { URL } from 'url';
 import AWS from 'aws-sdk';
-// tslint:disable-next-line
-import swagger from '../docs/swagger.yaml';
+import { load } from 'js-yaml';
 import { processAPILambda, randomString } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
 import { BadRequestError } from './errors';
-import { getDynamoTableName, getStateMachineARN } from './config';
+import { getDynamoTableName, getStateMachineARN, getSwaggerPath } from './config';
 
 const dynamodb = new AWS.DynamoDB();
 const sfn = new AWS.StepFunctions();
+const s3 = new AWS.S3();
 
 /**
  * Check if given url is valid HTTP or HTTPs url.
@@ -141,6 +141,8 @@ export async function handler(event: APIGatewayProxyEvent) {
     return await processAPILambda(async () => submitEvent(event));
   }
   if (event.path === '/schedule/docs' && event.httpMethod === 'GET') {
+    const data = await s3.getObject(getSwaggerPath()).promise()
+    const swagger = load(data.Body?.toString('utf-8') || '{}');
     return {
       statusCode: 200,
       body: JSON.stringify(swagger),

@@ -2,6 +2,8 @@
  * Configurations file.
  */
 
+import { GetObjectRequest } from "aws-sdk/clients/s3";
+
 /**
  * Get dynamodb table name.
  */
@@ -17,7 +19,17 @@ export function getDynamoTableName() {
  */
 export function getStateMachineARN() {
   if (!process.env.STATE_MACHINE_ARN) {
-    throw new Error('TABLE_NAME is not defined');
+    throw new Error('STATE_MACHINE_ARN is not defined');
   }
   return process.env.STATE_MACHINE_ARN;
+}
+
+/**
+ * Get swagger file path in S3.
+ */
+export function getSwaggerPath(): GetObjectRequest {
+  if (!process.env.S3_BUCKET) {
+    throw new Error('S3_BUCKET to host swagger is not defined');
+  }
+  return { Bucket: process.env.S3_BUCKET || '', Key: 'swagger.yaml' };
 }

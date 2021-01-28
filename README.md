@@ -14,33 +14,30 @@ Dev: [![CircleCI](https://circleci.com/gh/topcoder-platform/scheduler-api/tree/d
 
 - [Schedule Executor](https://github.com/topcoder-platform/schedule-executor)
 - node v10
-- cdk:
-  - `npm i -g aws-cdk`
 - postman for testing https://www.getpostman.com/
 
 ## Environment Variables
 
 TABLE_NAME: The name of the dynamodb table  
 STATE_MACHINE_ARN: The ARN of the [schedule executor](https://github.com/topcoder-platform/schedule-executor)
+S3_BUCKET: The bucket name of the swagger file
+
+*Note:* Create a .env file in root folder then add these three configs.
 
 ## Deploy
 
 ```bash
-yarn
-yarn run build
-cdk bootstrap
-cdk deploy
+npm install
+npm run deploy
 ```
-
-## Lint
-
-Execute `yarn run lint`
 
 ## Destroy instances
 
-**WARNING** This will destroy all resources created in the earlier `cdk deploy` step
+**WARNING** This will destroy all resources created in the earlier `npm run deploy` step
 
-Run `cdk destroy` to clean up AWS resources.
+Run `npm run destroy` to clean up AWS resources.
+
+It will NOT delete the Table nor the S3 Bucket resources
 
 ### Notes
 

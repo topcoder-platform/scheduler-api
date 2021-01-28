@@ -1,0 +1,212 @@
+{
+	"info": {
+		"_postman_id": "ed5359ee-5023-4da7-9063-62b7505d5cbd",
+		"name": "Scheduler",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "errors",
+			"item": [
+				{
+					"name": "missing params",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"method\": \"get\",\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/schedule",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"schedule"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalid time >1 year",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"url\": \"https://qiofmngngnanmfna\",\n  \"method\": \"get\",\n  \"scheduleTime\": \"4019-09-22T07:18:02.437Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/schedule",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"schedule"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sample GET",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"get\",\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/schedule",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"schedule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sample POST",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"post\",\n  \"payload\": \"test\",\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/schedule",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"schedule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sample POST json",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"post\",\n  \"payload\": \"{\\\"foo\\\": 123}\",\n  \"headers\": {\n  \t\"content-type\": \"application/json\"\n  },\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/schedule",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"schedule"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sample POST urlencoded",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"post\",\n  \"payload\": \"foo=123\",\n  \"headers\": {\n  \t\"content-type\": \"application/x-www-form-urlencoded\"\n  },\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/schedule",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"schedule"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
