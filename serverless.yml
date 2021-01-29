@@ -1,0 +1,48 @@
+service: aws-scheduler-api
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  role: ${env:LAMBDA_ROLE}
+  memorySize: 256
+  timeout: 10
+  apiGateway:
+    shouldStartNameWithService: true
+  lambdaHashingVersion: 20201221
+
+plugins:
+  - serverless-bundle
+  - serverless-s3-deploy
+
+custom:
+  bundle:
+    linting: false
+  dotenv:
+    file: true
+  assets:
+    auto: true
+    targets:
+      - bucket:
+          Ref: S3Bucket
+        files:
+          - source: ./docs/
+            globs: 'swagger.yaml'
+
+functions:
+  submitLambda:
+    handler: src/submit-lambda.handler
+    events:
+      - http:
+          path: v5/schedule
+          method: post
+      - http:
+          path: v5/schedule/docs
+          method: get
+      - http:
+          path: v5/schedule/health
+          method: get
+    environment:
+      TABLE_NAME: ${env:TABLE_NAME}
+      STATE_MACHINE_ARN: ${env:STATE_MACHINE_ARN}
+      S3_BUCKET: ${env:S3_BUCKET}

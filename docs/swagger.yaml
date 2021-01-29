@@ -1,0 +1,67 @@
+swagger: "2.0"
+info:
+  description: "This API is part of the Scheduler Processor -> Schedule API -> Schedule Executor triage of modules. This module is responsible to create the events in AWS Step functions, which are later executed by the Executor"
+  version: "1.0.0"
+  title: "Topcoder AutoPilot - Schedule API"
+tags:
+- name: "Schedule"
+  description: "Schedule API"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /schedule:
+    post:
+      tags:
+      - "Schedule"
+      summary: Create the events in AWS Step functions.
+      description: "Create the events in AWS Step functions that are later executed by the Executor."
+      operationId: "schedule"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          required:
+          - url
+          - method
+          - scheduleTime
+          properties:
+            url:
+              type: "string"
+            method:
+              type: "string"
+              enum: ['get', 'put', 'post', 'delete', 'patch']
+            payload:
+              type: "string"
+            headers:
+              type: object
+            scheduleTime:
+              type: "string"
+              format: date-time
+      responses:
+        "200":
+          description: "OK - the request was successful"
+          schema:
+            type: object
+            properties:
+              id:
+                type: "string"
+        "400":
+          description: "Bad request - Problem with the request (E.g. Missing parameters)"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: "Internal Server Error - Request is valid but operation failed at server side"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+definitions:
+  ErrorResponse:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+  

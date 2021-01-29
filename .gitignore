@@ -1,4 +1,4 @@
-cdk.out/
+.serverless/
 dist/
 node_modules/
 

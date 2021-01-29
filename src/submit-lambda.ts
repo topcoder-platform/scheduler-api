@@ -4,13 +4,15 @@
  */
 import { URL } from 'url';
 import AWS from 'aws-sdk';
+import { load } from 'js-yaml';
 import { processAPILambda, randomString } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
 import { BadRequestError } from './errors';
-import { getDynamoTableName, getStateMachineARN } from './config';
+import { getDynamoTableName, getStateMachineARN, getSwaggerPath } from './config';
 
 const dynamodb = new AWS.DynamoDB();
 const sfn = new AWS.StepFunctions();
+const s3 = new AWS.S3();
 
 /**
  * Check if given url is valid HTTP or HTTPs url.
@@ -98,36 +100,72 @@ function _validateInput(body: string | null) {
 }
 
 /**
+ * Submit schedule event.
+ * @param event APIGatewayProxyEvent
+ */
+async function submitEvent(event: APIGatewayProxyEvent) {
+  if (event.isBase64Encoded) {
+    throw new BadRequestError('Binary data not supported.');
+  }
+  const input = _validateInput(event.body);
+  const id = randomString(20);
+  input.id = id;
+  const serialized = JSON.stringify(input);
+
+  await dynamodb
+    .putItem({
+      TableName: getDynamoTableName(),
+      Item: {
+        id: { S: id },
+        input: { S: serialized },
+      },
+    })
+    .promise();
+
+  await sfn
+    .startExecution({
+      name: id,
+      input: serialized,
+      stateMachineArn: getStateMachineARN(),
+    })
+    .promise();
+
+  return { id };
+}
+
+/**
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
-  return await processAPILambda(async () => {
-    if (event.isBase64Encoded) {
-      throw new BadRequestError('Binary data not supported.');
+  if (event.path === '/v5/schedule' && event.httpMethod === 'POST') {
+    return await processAPILambda(async () => submitEvent(event));
+  }
+  if (event.path === '/v5/schedule/docs' && event.httpMethod === 'GET') {
+    const data = await s3.getObject(getSwaggerPath()).promise()
+    const swagger = load(data.Body?.toString('utf-8') || '{}');
+    return {
+      statusCode: 200,
+      body: JSON.stringify(swagger),
+    };
+  }
+  if (event.path === '/v5/schedule/health' && event.httpMethod === 'GET') {
+    try {
+      await dynamodb.scan({ TableName: getDynamoTableName(), Limit: 1 }).promise();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ checksRun: 1 })
+      }
+    }catch (e) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: e.message })
+      }
     }
-    const input = _validateInput(event.body);
-    const id = randomString(20);
-    input.id = id;
-    const serialized = JSON.stringify(input);
-
-    await dynamodb
-      .putItem({
-        TableName: getDynamoTableName(),
-        Item: {
-          id: { S: id },
-          input: { S: serialized },
-        },
-      })
-      .promise();
-
-    await sfn
-      .startExecution({
-        name: id,
-        input: serialized,
-        stateMachineArn: getStateMachineARN(),
-      })
-      .promise();
-
-    return { id };
-  });
+  }
+  return {
+    statusCode: 404,
+    body: JSON.stringify({
+      error: 'The requested resource cannot found.',
+    }),
+  };
 }

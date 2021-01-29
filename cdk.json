@@ -1,4 +1,0 @@
-{
-  "app": "node cdk/MainStack",
-  "requireApproval": "never"
-}
