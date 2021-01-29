@@ -78,6 +78,7 @@ workflows:
             branches:
               only:
                 - dev-circleciv1
+                - develop
 
       # Production builds are exectuted only on tagged commits to the
       # master branch.
