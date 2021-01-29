@@ -137,10 +137,10 @@ async function submitEvent(event: APIGatewayProxyEvent) {
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
-  if (event.path === '/schedule' && event.httpMethod === 'POST') {
+  if (event.path === '/v5/schedule' && event.httpMethod === 'POST') {
     return await processAPILambda(async () => submitEvent(event));
   }
-  if (event.path === '/schedule/docs' && event.httpMethod === 'GET') {
+  if (event.path === '/v5/schedule/docs' && event.httpMethod === 'GET') {
     const data = await s3.getObject(getSwaggerPath()).promise()
     const swagger = load(data.Body?.toString('utf-8') || '{}');
     return {
@@ -148,7 +148,7 @@ export async function handler(event: APIGatewayProxyEvent) {
       body: JSON.stringify(swagger),
     };
   }
-  if (event.path === '/health' && event.httpMethod === 'GET') {
+  if (event.path === '/v5/schedule/health' && event.httpMethod === 'GET') {
     try {
       await dynamodb.scan({ TableName: getDynamoTableName(), Limit: 1 }).promise();
       return {
