@@ -34,13 +34,13 @@ functions:
     handler: src/submit-lambda.handler
     events:
       - http:
-          path: v5/schedule
+          path: v5/schedules
           method: post
       - http:
-          path: v5/schedule/docs
+          path: v5/schedules/docs
           method: get
       - http:
-          path: v5/schedule/health
+          path: v5/schedules/health
           method: get
     environment:
       TABLE_NAME: ${env:TABLE_NAME}
