@@ -134,3 +134,19 @@ function getPageLink(req: APIGatewayProxyEvent, page: number) {
   const q = _.assignIn({}, req.queryStringParameters, { page })
   return `${getAPIBaseURL()}${req.path}?${querystring.stringify(q)}`
 }
+
+
+/**
+ * Check if the user has admin role
+ * @param {Object} authUser the user
+ */
+export function hasAdminRole (authUser:any) {
+  if (authUser && authUser.roles) {
+    for (let i = 0; i < authUser.roles.length; i++) {
+      if (authUser.roles[i].toLowerCase() === 'admin') {
+        return true
+      }
+    }
+  }
+  return false
+}

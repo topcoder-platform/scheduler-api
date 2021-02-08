@@ -55,3 +55,6 @@ functions:
       STATE_MACHINE_ARN: ${env:STATE_MACHINE_ARN}
       S3_BUCKET: ${env:S3_BUCKET}
       API_BASE_URL: ${env:API_BASE_URL}
+      AUTH_SECRET: ${env:AUTH_SECRET}
+      VALID_ISSUERS: ${env:VALID_ISSUERS}
+      VALID_SCOPES: ${env:VALID_SCOPES}

@@ -23,6 +23,14 @@ export class BadRequestError extends HttpError {
  */
 export class UnauthorizedError extends HttpError {
   constructor(message: string, public params?: any) {
+    super(401, message);
+  }
+}
+/**
+ * Forbidden Request HTTP 400 Error.
+ */
+export class ForbiddenError extends HttpError {
+  constructor(message: string, public params?: any) {
     super(403, message);
   }
 }

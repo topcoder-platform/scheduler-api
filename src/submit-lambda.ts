@@ -6,10 +6,10 @@ import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
 import * as tcCoreLib from 'tc-core-library-js';
-import { processAPILambda, randomString, makeHeaders, scanAll } from './helper';
+import { processAPILambda, randomString, makeHeaders, scanAll, hasAdminRole } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
-import { BadRequestError, NotFoundError, UnauthorizedError } from './errors';
-import { getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers, getAuthSecret } from './config';
+import { BadRequestError, NotFoundError, UnauthorizedError, ForbiddenError } from './errors';
+import { getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers, getAuthSecret, getAllowedScopes } from './config';
 import _ from 'lodash';
 
 const authenticator = tcCoreLib.middleware.jwtAuthenticator;
@@ -66,9 +66,14 @@ async function _validateInput(body: string | null) {
   } catch (e) {
     throw new BadRequestError('Invalid JSON body');
   }
-  if (input.headers)
-    await authCheck(input.headers)
-  else
+  if (input.headers) {
+    const authRes:any = await authCheck(input.headers)
+    if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
+      throw new ForbiddenError('You are not allowed to perform this operation')
+    } else if (!hasAdminRole(authRes.authUser)) {
+      throw new ForbiddenError('You are not allowed to perform this operation')
+    }
+  } else
     throw new UnauthorizedError('Authentication is required')
   if (!input.url) {
     throw new BadRequestError('url is required');
@@ -130,7 +135,7 @@ async function createEvent(event: APIGatewayProxyEvent) {
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
-  const input = _validateInput(event.body);
+  const input = await _validateInput(event.body);
   const id = randomString(20);
   input.id = id;
   const serialized = JSON.stringify(input);
@@ -190,7 +195,7 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
-  const input = _validateInput(event.body);
+  const input = await _validateInput(event.body);
   const id = input.id;
   //delete event by id
   const res = await dynamodb.deleteItem({

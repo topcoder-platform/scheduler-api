@@ -73,3 +73,13 @@ export function getAuthSecret() {
   }
   return process.env.AUTH_SECRET;
 }
+
+/**
+ * Get Scopes
+ */
+export function getAllowedScopes() {
+  if (!process.env.VALID_SCOPES) {
+    return ['schedules:all']
+  }
+  return process.env.VALID_SCOPES.split(',');
+}
