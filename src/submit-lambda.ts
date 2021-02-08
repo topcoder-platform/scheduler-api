@@ -5,14 +5,14 @@
 import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
-import * as tcCoreLib from 'tc-core-library-js';
+import { middleware} from 'tc-core-library-js';
 import { processAPILambda, randomString, makeHeaders, scanAll, hasAdminRole } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
 import { BadRequestError, NotFoundError, UnauthorizedError, ForbiddenError } from './errors';
 import { getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers, getAuthSecret, getAllowedScopes } from './config';
 import _ from 'lodash';
 
-const authenticator = tcCoreLib.middleware.jwtAuthenticator;
+const authenticator = middleware.jwtAuthenticator;
 
 const dynamodb = new AWS.DynamoDB({
   region: process.env.DYNAMODB_REGION
