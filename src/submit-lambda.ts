@@ -6,10 +6,10 @@ import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
 // import { middleware} from 'tc-core-library-js';
-import { processAPILambda, randomString, makeHeaders, scanAll, hasAdminRole } from './helper';
+import { processAPILambda, randomString, makeHeaders, scanAll } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
-import { BadRequestError, NotFoundError, UnauthorizedError, ForbiddenError } from './errors';
-import { getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers, getAuthSecret, getAllowedScopes } from './config';
+import { BadRequestError, NotFoundError } from './errors';
+import { getDynamoTableName, getStateMachineARN, getSwaggerPath } from './config';
 import _ from 'lodash';
 
 // const authenticator = middleware.jwtAuthenticator;
