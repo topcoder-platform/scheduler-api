@@ -5,14 +5,14 @@
 import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
-import { middleware} from 'tc-core-library-js';
+// import { middleware} from 'tc-core-library-js';
 import { processAPILambda, randomString, makeHeaders, scanAll, hasAdminRole } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
 import { BadRequestError, NotFoundError, UnauthorizedError, ForbiddenError } from './errors';
 import { getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers, getAuthSecret, getAllowedScopes } from './config';
 import _ from 'lodash';
 
-const authenticator = middleware.jwtAuthenticator;
+// const authenticator = middleware.jwtAuthenticator;
 
 const dynamodb = new AWS.DynamoDB({
   region: process.env.DYNAMODB_REGION
@@ -40,17 +40,17 @@ function _isValidUrl(url: string) {
  * Bearer authentication check
  * @param headers the headers
  */
-async function authCheck (headers: { [x: string]: string }) {
-  return new Promise((resolve, reject) => {
-    const res = {
-      send: () => reject(new UnauthorizedError('Invalid or missing token'))
-    }
-    authenticator({
-      AUTH_SECRET: getAuthSecret(),
-      VALID_ISSUERS: getValidIssuers()
-    })({ headers }, res, (req: any) => resolve(req.authUser))
-  })
-}
+// async function authCheck (headers: { [x: string]: string }) {
+//   return new Promise((resolve, reject) => {
+//     const res = {
+//       send: () => reject(new UnauthorizedError('Invalid or missing token'))
+//     }
+//     authenticator({
+//       AUTH_SECRET: getAuthSecret(),
+//       VALID_ISSUERS: getValidIssuers()
+//     })({ headers }, res, (req: any) => resolve(req.authUser))
+//   })
+// }
 
 /**
  * Check if request body is valid.
@@ -66,15 +66,15 @@ async function _validateInput(body: string | null) {
   } catch (e) {
     throw new BadRequestError('Invalid JSON body');
   }
-  if (input.headers) {
-    const authRes:any = await authCheck(input.headers)
-    if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
-      throw new ForbiddenError('You are not allowed to perform this operation')
-    } else if (!hasAdminRole(authRes.authUser)) {
-      throw new ForbiddenError('You are not allowed to perform this operation')
-    }
-  } else
-    throw new UnauthorizedError('Authentication is required')
+  // if (input.headers) {
+  //   const authRes:any = await authCheck(input.headers)
+  //   if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
+  //     throw new ForbiddenError('You are not allowed to perform this operation')
+  //   } else if (!hasAdminRole(authRes.authUser)) {
+  //     throw new ForbiddenError('You are not allowed to perform this operation')
+  //   }
+  // } else
+  //   throw new UnauthorizedError('Authentication is required')
   if (!input.url) {
     throw new BadRequestError('url is required');
   }
