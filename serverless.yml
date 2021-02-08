@@ -5,6 +5,7 @@ provider:
   name: aws
   runtime: nodejs10.x
   role: ${env:LAMBDA_ROLE}
+  region: ${env:REGION}
   memorySize: 256
   timeout: 10
   apiGateway:
@@ -27,7 +28,8 @@ custom:
           Ref: S3Bucket
         files:
           - source: ./docs/
-            globs: 'swagger.yaml'
+            globs: "swagger.yaml"
+  stage: ${opt:stage, self:provider.stage}
 
 functions:
   submitLambda:
@@ -36,6 +38,12 @@ functions:
       - http:
           path: v5/schedules
           method: post
+      - http:
+          path: v5/schedules
+          method: get
+      - http:
+          path: v5/schedules
+          method: delete
       - http:
           path: v5/schedules/docs
           method: get
@@ -46,3 +54,4 @@ functions:
       TABLE_NAME: ${env:TABLE_NAME}
       STATE_MACHINE_ARN: ${env:STATE_MACHINE_ARN}
       S3_BUCKET: ${env:S3_BUCKET}
+      API_BASE_URL: ${env:API_BASE_URL}

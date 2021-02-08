@@ -33,3 +33,23 @@ export function getSwaggerPath(): GetObjectRequest {
   }
   return { Bucket: process.env.S3_BUCKET || '', Key: 'swagger.yaml' };
 }
+
+/**
+ * Get API Base URL
+ */
+export function getAPIBaseURL() {
+  if (!process.env.API_BASE_URL) {
+    throw new Error('API_BASE_URL is not defined');
+  }
+  return process.env.API_BASE_URL;
+}
+
+/**
+ * Get API Base URL
+ */
+export function getDynamoRegion() {
+  if (!process.env.DYNAMODB_REGION) {
+    throw new Error('DYNAMODB_REGION is not defined');
+  }
+  return process.env.DYNAMODB_REGION;
+}

@@ -18,3 +18,11 @@ export class BadRequestError extends HttpError {
     super(400, message);
   }
 }
+/**
+ * Not Found HTTP 404 Error.
+ */
+export class NotFoundError extends HttpError {
+  constructor(message: string, public params?: any) {
+    super(404, message);
+  }
+}
