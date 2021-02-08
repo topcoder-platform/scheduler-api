@@ -79,6 +79,7 @@ export async function processAPILambda(fn: () => Promise<any>) {
       response.headers = result.header;
     if (result.body)
       response.body = result.body;
+    return response;
   } catch (e) {
     // tslint:disable-next-line:no-console
     console.error(e);
