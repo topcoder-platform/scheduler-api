@@ -1,28 +1,49 @@
 {
 	"info": {
-		"_postman_id": "85fdd699-3996-4b12-bff5-1b3847e60d23",
+		"_postman_id": "d644aa9b-c507-429a-a329-6514bdc342c1",
 		"name": "Scheduler",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "errors",
+			"name": "Error",
 			"item": [
 				{
-					"name": "url not found",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+					"name": "ERR 01 missing params",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
 							}
-						],
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "awsv4",
+							"awsv4": [
+								{
+									"key": "secretKey",
+									"value": "{{AWS_SECRET_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "accessKey",
+									"value": "{{AWS_ACCESS_KEY}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"url\": \"https://qiofmngngnanmfna\",\n  \"method\": \"get\",\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+							"raw": "{\r\n  \"method\": \"get\",\r\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,32 +51,50 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/schedule",
+							"raw": "{{URL}}",
 							"host": [
 								"{{URL}}"
-							],
-							"path": [
-								"schedule"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "missing params",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+					"name": "ERR 02 invalid time >1 year",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
 							}
-						],
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "awsv4",
+							"awsv4": [
+								{
+									"key": "secretKey",
+									"value": "{{AWS_SECRET_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "accessKey",
+									"value": "{{AWS_ACCESS_KEY}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"method\": \"get\",\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+							"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"a93544bc-c165-4af4-b55e-18f3593b457a\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"4021-02-03T14:01:24Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -63,32 +102,50 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/schedule",
+							"raw": "{{URL}}",
 							"host": [
 								"{{URL}}"
-							],
-							"path": [
-								"schedule"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "invalid time >1 year",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+					"name": "ERR 03 wrong id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
 							}
-						],
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "awsv4",
+							"awsv4": [
+								{
+									"key": "secretKey",
+									"value": "{{AWS_SECRET_KEY}}",
+									"type": "string"
+								},
+								{
+									"key": "accessKey",
+									"value": "{{AWS_ACCESS_KEY}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"url\": \"https://qiofmngngnanmfna\",\n  \"method\": \"get\",\n  \"scheduleTime\": \"4019-09-22T07:18:02.437Z\"\n}",
+							"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"6950164f-3c5e-4bdc-abc8-22aaf5a1bd49\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-03T14:10:58Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"id\":\"99999989\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,35 +153,56 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/schedule",
+							"raw": "{{URL}}",
 							"host": [
 								"{{URL}}"
-							],
-							"path": [
-								"schedule"
 							]
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST 01",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"if(data.id)\r",
+							"postman.setEnvironmentVariable(\"demoID1\",data.id);"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "sample GET",
 			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"get\",\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"a93544bc-c165-4af4-b55e-18f3593b457a\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-03T14:01:24Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -132,32 +210,54 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}/schedule",
+					"raw": "{{URL}}",
 					"host": [
 						"{{URL}}"
-					],
-					"path": [
-						"schedule"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "sample POST",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+			"name": "POST 02",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID2\",data.id);"
+						],
+						"type": "text/javascript"
 					}
-				],
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"post\",\n  \"payload\": \"test\",\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"a93544bc-c165-4af4-b55e-18f3593b457a\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-03-05T14:01:00Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -165,32 +265,54 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}/schedule",
+					"raw": "{{URL}}",
 					"host": [
 						"{{URL}}"
-					],
-					"path": [
-						"schedule"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "sample POST json",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+			"name": "POST 03",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID3\",data.id);"
+						],
+						"type": "text/javascript"
 					}
-				],
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"post\",\n  \"payload\": \"{\\\"foo\\\": 123}\",\n  \"headers\": {\n  \t\"content-type\": \"application/json\"\n  },\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"003a4b14-de5d-43fc-9e35-835dbeb6af1f\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-03T14:10:58Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -198,32 +320,54 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}/schedule",
+					"raw": "{{URL}}",
 					"host": [
 						"{{URL}}"
-					],
-					"path": [
-						"schedule"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "sample POST urlencoded",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+			"name": "POST 04",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID4\",data.id);"
+						],
+						"type": "text/javascript"
 					}
-				],
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"url\": \"<your_url>\",\n  \"method\": \"post\",\n  \"payload\": \"foo=123\",\n  \"headers\": {\n  \t\"content-type\": \"application/x-www-form-urlencoded\"\n  },\n  \"scheduleTime\": \"1019-09-22T07:18:02.437Z\"\n}",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"003a4b14-de5d-43fc-9e35-835dbeb6af1f\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-04T14:10:00Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -231,17 +375,934 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}/schedule",
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 05",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID5\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"6950164f-3c5e-4bdc-abc8-22aaf5a1bd49\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-03T14:10:58Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 06",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID6\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"6950164f-3c5e-4bdc-abc8-22aaf5a1bd49\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-03-05T14:10:00Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 07",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID7\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"a93544bc-c165-4af4-b55e-18f3593b457a\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-05T00:43:37Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 08",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID8\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"a93544bc-c165-4af4-b55e-18f3593b457a\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-15T00:42:00Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 09",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID9\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"003a4b14-de5d-43fc-9e35-835dbeb6af1f\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-05T00:48:00Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID10\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"003a4b14-de5d-43fc-9e35-835dbeb6af1f\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-06T00:48:00Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 11",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID11\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"6950164f-3c5e-4bdc-abc8-22aaf5a1bd49\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-05T00:48:00Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST 12",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID12\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"patch\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"6950164f-3c5e-4bdc-abc8-22aaf5a1bd49\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-06T00:48:00Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET 01",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(data.length).equal(6);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}?externalId=d80a5399-96ae-418f-a2f0-f8612010a235",
 					"host": [
 						"{{URL}}"
 					],
-					"path": [
-						"schedule"
+					"query": [
+						{
+							"key": "externalId",
+							"value": "d80a5399-96ae-418f-a2f0-f8612010a235"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET 02 with pagination",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(data.length).equal(5);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}?externalId=d80a5399-96ae-418f-a2f0-f8612010a235&page=1&perPage=5",
+					"host": [
+						"{{URL}}"
+					],
+					"query": [
+						{
+							"key": "externalId",
+							"value": "d80a5399-96ae-418f-a2f0-f8612010a235"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "perPage",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET 03 with pagination",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(data.length).equal(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}?externalId=d80a5399-96ae-418f-a2f0-f8612010a235&page=2&perPage=5",
+					"host": [
+						"{{URL}}"
+					],
+					"query": [
+						{
+							"key": "externalId",
+							"value": "d80a5399-96ae-418f-a2f0-f8612010a235"
+						},
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "perPage",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE 05",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID5\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"delete\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"6950164f-3c5e-4bdc-abc8-22aaf5a1bd49\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-03T14:10:58Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"id\":\"{{demoID5}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE 06",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID6\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"method\": \"delete\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"6950164f-3c5e-4bdc-abc8-22aaf5a1bd49\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-03-05T14:10:00Z\",\r\n  \"externalId\":\"d80a5399-96ae-418f-a2f0-f8612010a235\",\r\n  \"id\":\"{{demoID6}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE 09",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID5\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"delete\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"003a4b14-de5d-43fc-9e35-835dbeb6af1f\\\",\\n            \\\"isOpen\\\": true\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-05T00:48:00Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"id\":\"{{demoID9}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE 10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+							"});\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"demoID6\",data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"url\": \"https://api.topcoder-dev.com/v5/challenges/7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"method\": \"delete\",\r\n  \"payload\": \"{ \\\"phases\\\": [{\\n            \\\"phaseId\\\": \\\"003a4b14-de5d-43fc-9e35-835dbeb6af1f\\\",\\n            \\\"isOpen\\\": false\\n          }]\\n        }\",\r\n  \"headers\": {\r\n  \t\"content-type\": \"application/json\"\r\n  },\r\n  \"scheduleTime\": \"2021-02-06T00:48:00Z\",\r\n  \"externalId\":\"7f9afa51-021a-44ca-9a56-edcbf978d6c5\",\r\n  \"id\":\"{{demoID10}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET 04",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(data.length).equal(4);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}?externalId=d80a5399-96ae-418f-a2f0-f8612010a235",
+					"host": [
+						"{{URL}}"
+					],
+					"query": [
+						{
+							"key": "externalId",
+							"value": "d80a5399-96ae-418f-a2f0-f8612010a235"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET 05",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(data.length).equal(4);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "awsv4",
+					"awsv4": [
+						{
+							"key": "secretKey",
+							"value": "{{AWS_SECRET_KEY}}",
+							"type": "string"
+						},
+						{
+							"key": "accessKey",
+							"value": "{{AWS_ACCESS_KEY}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}?externalId=7f9afa51-021a-44ca-9a56-edcbf978d6c5",
+					"host": [
+						"{{URL}}"
+					],
+					"query": [
+						{
+							"key": "externalId",
+							"value": "7f9afa51-021a-44ca-9a56-edcbf978d6c5"
+						}
 					]
 				}
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

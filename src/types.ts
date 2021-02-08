@@ -13,6 +13,7 @@ export interface InputData {
   payload?: string;
   headers?: { [x: string]: string };
   scheduleTime: string;
+  externalId?: string;
 }
 
 export interface APIGatewayEventRequestContext {
