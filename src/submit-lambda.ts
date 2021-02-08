@@ -5,11 +5,14 @@
 import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
+import * as tcCoreLib from 'tc-core-library-js';
 import { processAPILambda, randomString, makeHeaders, scanAll } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
-import { BadRequestError, NotFoundError } from './errors';
-import { getDynamoTableName, getStateMachineARN, getSwaggerPath } from './config';
+import { BadRequestError, NotFoundError, UnauthorizedError } from './errors';
+import { getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers, getAuthSecret } from './config';
 import _ from 'lodash';
+
+const authenticator = tcCoreLib.middleware.jwtAuthenticator;
 
 const dynamodb = new AWS.DynamoDB({
   region: process.env.DYNAMODB_REGION
@@ -34,10 +37,26 @@ function _isValidUrl(url: string) {
 }
 
 /**
+ * Bearer authentication check
+ * @param headers the headers
+ */
+async function authCheck (headers: { [x: string]: string }) {
+  return new Promise((resolve, reject) => {
+    const res = {
+      send: () => reject(new UnauthorizedError('Invalid or missing token'))
+    }
+    authenticator({
+      AUTH_SECRET: getAuthSecret(),
+      VALID_ISSUERS: getValidIssuers()
+    })({ headers }, res, (req: any) => resolve(req.authUser))
+  })
+}
+
+/**
  * Check if request body is valid.
  * @param body the request body
  */
-function _validateInput(body: string | null) {
+async function _validateInput(body: string | null) {
   let input: InputData = null!;
   if (!body) {
     throw new BadRequestError('HTTP body must be defined');
@@ -47,6 +66,10 @@ function _validateInput(body: string | null) {
   } catch (e) {
     throw new BadRequestError('Invalid JSON body');
   }
+  if (input.headers)
+    await authCheck(input.headers)
+  else
+    throw new UnauthorizedError('Authentication is required')
   if (!input.url) {
     throw new BadRequestError('url is required');
   }

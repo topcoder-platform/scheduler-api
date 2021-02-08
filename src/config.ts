@@ -53,3 +53,23 @@ export function getDynamoRegion() {
   }
   return process.env.DYNAMODB_REGION;
 }
+
+/**
+ * Get VALID_ISSUERS
+ */
+export function getValidIssuers() {
+  if (!process.env.VALID_ISSUERS) {
+    throw new Error('VALID_ISSUERS is not defined');
+  }
+  return process.env.VALID_ISSUERS;
+}
+
+/**
+ * Get AUTH_SECRET
+ */
+export function getAuthSecret() {
+  if (!process.env.AUTH_SECRET) {
+    throw new Error('AUTH_SECRET is not defined');
+  }
+  return process.env.AUTH_SECRET;
+}
