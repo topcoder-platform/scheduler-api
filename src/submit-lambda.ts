@@ -156,7 +156,7 @@ async function createEvent(event: APIGatewayProxyEvent) {
     input: { S: serialized }
   };
   if (input.externalId) {
-    dynamoObj.externalId = input.externalId;
+    dynamoObj.externalId = { S: input.externalId };
   }
   await dynamodb
     .putItem({
