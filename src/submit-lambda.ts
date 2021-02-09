@@ -151,13 +151,17 @@ async function createEvent(event: APIGatewayProxyEvent) {
   const serialized = JSON.stringify(input);
 
   console.log('before calling dynamodb.putItem')
+  const dynamoObj:any = {
+    id: { S: id },
+    input: { S: serialized }
+  };
+  if (input.externalId) {
+    dynamoObj.externalId = input.externalId;
+  }
   await dynamodb
     .putItem({
       TableName: getDynamoTableName(),
-      Item: {
-        id: { S: id },
-        input: { S: serialized },
-      },
+      Item: dynamoObj,
     })
     .promise();
   //register event for create
