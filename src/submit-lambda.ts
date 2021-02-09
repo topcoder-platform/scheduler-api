@@ -233,9 +233,8 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
   //return 404 if event not exists
   if (res.Attributes == null)
     throw new NotFoundError('event to delete is not found.');
-  const arn:any = res.Attributes.executionArn
   await sfn.stopExecution({
-    executionArn: arn
+    executionArn: _.toString(res.Attributes.executionArn)
   }, () => {}).promise()
   console.log('completed!')
 }
