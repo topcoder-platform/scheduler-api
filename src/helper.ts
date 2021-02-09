@@ -75,9 +75,9 @@ export async function processAPILambda(fn: () => Promise<any>) {
     const response:any = {
       statusCode: 200
     };
-    if (result.header)
+    if (_.get(result, 'header'))
       response.headers = result.header;
-    if (result.body)
+    if (_.get(result, 'body'))
       response.body = JSON.stringify(result.body);
     return response;
   } catch (e) {
