@@ -78,7 +78,7 @@ export async function processAPILambda(fn: () => Promise<any>) {
     if (result.header)
       response.headers = result.header;
     if (result.body)
-      response.body = result.body;
+      response.body = JSON.stringify(result.body);
     return response;
   } catch (e) {
     // tslint:disable-next-line:no-console
