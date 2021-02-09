@@ -88,7 +88,7 @@ async function _validateInput(body: string | null) {
   if (!input.method) {
     throw new BadRequestError('method is required');
   }
-  const allowedMethods = ['get', 'put', 'post', 'delete'];
+  const allowedMethods = ['get', 'put', 'post', 'delete', 'patch'];
   if (!allowedMethods.includes(input.method)) {
     throw new BadRequestError(`method '${input.method}' is not valid. Allowed values: ${allowedMethods.join(', ')}.`
     );
