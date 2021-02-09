@@ -62,8 +62,11 @@ async function _validateInput(body: string | null) {
     throw new BadRequestError('HTTP body must be defined');
   }
   try {
-    console.log(body)
-    input = JSON.parse(body);
+    if (_.isString(body)) {
+      input = JSON.parse(body);
+    } else {
+      input = body
+    }
   } catch (e) {
     throw new BadRequestError('Invalid JSON body');
   }
