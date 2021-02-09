@@ -57,12 +57,15 @@ function _isValidUrl(url: string) {
  * @param body the request body
  */
 async function _validateInput(body: string | null) {
+  console.log('inside _validateInput')
   let input: InputData = null!;
   if (!body) {
     throw new BadRequestError('HTTP body must be defined');
   }
+  console.log('before parsing body')
   try {
     if (_.isString(body)) {
+      console.log('trying to parse the body')
       input = JSON.parse(body);
     } else {
       input = body
@@ -127,6 +130,7 @@ async function _validateInput(body: string | null) {
     }
     input.scheduleTime = date.toISOString();
   }
+  console.log('completed')
 
   return input;
 }
@@ -136,14 +140,17 @@ async function _validateInput(body: string | null) {
  * @param event APIGatewayProxyEvent
  */
 async function createEvent(event: APIGatewayProxyEvent) {
+  console.log('Inside createEvent')
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
+  console.log('before calling _validateInput')
   const input = await _validateInput(event.body);
   const id = randomString(20);
   input.id = id;
   const serialized = JSON.stringify(input);
 
+  console.log('before calling dynamodb.putItem')
   await dynamodb
     .putItem({
       TableName: getDynamoTableName(),
@@ -154,13 +161,14 @@ async function createEvent(event: APIGatewayProxyEvent) {
     })
     .promise();
   //register event for create
+  console.log('before calling sfn.startExecution')
   await sfn
     .startExecution({
       input: serialized,
       stateMachineArn: getStateMachineARN(),
     })
     .promise();
-
+  console.log('completed')
   return { body: { id: id } };
 }
 
@@ -169,6 +177,7 @@ async function createEvent(event: APIGatewayProxyEvent) {
  * @param event APIGatewayProxyEvent
  */
 async function searchEvents(event: APIGatewayProxyEvent) {
+  console.log('Inside searchEvents')
   if (!event.queryStringParameters || !event.queryStringParameters.externalId)
     throw new BadRequestError(
       'externalId is required'
@@ -178,6 +187,7 @@ async function searchEvents(event: APIGatewayProxyEvent) {
   const perPage = +event.queryStringParameters.perPage || 50
   const externalId = event.queryStringParameters.externalId
 
+  console.log('before calling scanAll')
   let data = await scanAll(dynamodb)
   data = _.filter(data, e => externalId === e.externalId)
   const total = data.length
@@ -187,7 +197,9 @@ async function searchEvents(event: APIGatewayProxyEvent) {
   }
   //apply the pagination logic
   const results = data.slice((page - 1) * perPage, page * perPage)
+  console.log('before calling makeHeaders')
   const headers = makeHeaders(event, { total, page, perPage })
+  console.log('completed')
   return { header: headers, body: results }
 }
 
@@ -196,12 +208,15 @@ async function searchEvents(event: APIGatewayProxyEvent) {
  * @param event APIGatewayProxyEvent
  */
 async function deleteEvent(event: APIGatewayProxyEvent) {
+  console.log('Inside deleteEvent')
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
+  console.log('before calling _validateInput')
   const input = await _validateInput(event.body);
   const id = input.id;
   //delete event by id
+  console.log('before calling dynamodb.deleteItem')
   const res = await dynamodb.deleteItem({
     TableName: getDynamoTableName(),
     Key: {
@@ -213,12 +228,14 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
   //return 404 if event not exists
   if (res.Attributes == null)
     throw new NotFoundError('event to delete is not found.');
+  console.log('completed!')
 }
 
 /**
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
+  console.log('Inside handler')
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
     return await processAPILambda(async () => createEvent(event));
   }
