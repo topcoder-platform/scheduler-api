@@ -158,18 +158,19 @@ async function createEvent(event: APIGatewayProxyEvent) {
   if (input.externalId) {
     dynamoObj.externalId = { S: input.externalId };
   }
+  //register event for create
+  console.log('before calling sfn.startExecution')
+  const res = await sfn
+    .startExecution({
+      input: serialized,
+      stateMachineArn: getStateMachineARN(),
+    })
+    .promise();
+  dynamoObj.executionArn = { S: res.executionArn };
   await dynamodb
     .putItem({
       TableName: getDynamoTableName(),
       Item: dynamoObj,
-    })
-    .promise();
-  //register event for create
-  console.log('before calling sfn.startExecution')
-  await sfn
-    .startExecution({
-      input: serialized,
-      stateMachineArn: getStateMachineARN(),
     })
     .promise();
   console.log('completed')
@@ -221,17 +222,21 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
   const id = input.id;
   //delete event by id
   console.log('before calling dynamodb.deleteItem')
+
   const res = await dynamodb.deleteItem({
     TableName: getDynamoTableName(),
     Key: {
       id: { S: id },
     },
     ReturnValues: 'ALL_OLD'
-  })
-    .promise();
+  }).promise();
   //return 404 if event not exists
   if (res.Attributes == null)
     throw new NotFoundError('event to delete is not found.');
+  const arn:any = res.Attributes.executionArn
+  await sfn.stopExecution({
+    executionArn: arn
+  }, () => {}).promise()
   console.log('completed!')
 }
 
