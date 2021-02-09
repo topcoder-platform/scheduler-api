@@ -56,22 +56,25 @@ function _isValidUrl(url: string) {
  * Check if request body is valid.
  * @param body the request body
  */
-async function _validateInput(body: string | null) {
-  console.log('inside _validateInput')
+async function _validateInput(body: string | null, isDelete?: boolean) {
   let input: InputData = null!;
   if (!body) {
     throw new BadRequestError('HTTP body must be defined');
   }
-  console.log('before parsing body')
   try {
     if (_.isString(body)) {
-      console.log('trying to parse the body')
       input = JSON.parse(body);
     } else {
       input = body
     }
   } catch (e) {
     throw new BadRequestError('Invalid JSON body');
+  }
+  if (isDelete) {
+    if (!input.id) {
+      throw new BadRequestError('id is invalid');
+    }
+    return input;
   }
   // if (input.headers) {
   //   const authRes:any = await authCheck(input.headers)
@@ -130,7 +133,6 @@ async function _validateInput(body: string | null) {
     }
     input.scheduleTime = date.toISOString();
   }
-  console.log('completed')
 
   return input;
 }
@@ -140,17 +142,14 @@ async function _validateInput(body: string | null) {
  * @param event APIGatewayProxyEvent
  */
 async function createEvent(event: APIGatewayProxyEvent) {
-  console.log('Inside createEvent')
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
-  console.log('before calling _validateInput')
   const input = await _validateInput(event.body);
   const id = randomString(20);
   input.id = id;
   const serialized = JSON.stringify(input);
 
-  console.log('before calling dynamodb.putItem')
   const dynamoObj:any = {
     id: { S: id },
     input: { S: serialized }
@@ -159,7 +158,6 @@ async function createEvent(event: APIGatewayProxyEvent) {
     dynamoObj.externalId = { S: input.externalId };
   }
   //register event for create
-  console.log('before calling sfn.startExecution')
   const res = await sfn
     .startExecution({
       input: serialized,
@@ -173,7 +171,6 @@ async function createEvent(event: APIGatewayProxyEvent) {
       Item: dynamoObj,
     })
     .promise();
-  console.log('completed')
   return { body: { id: id } };
 }
 
@@ -182,7 +179,6 @@ async function createEvent(event: APIGatewayProxyEvent) {
  * @param event APIGatewayProxyEvent
  */
 async function searchEvents(event: APIGatewayProxyEvent) {
-  console.log('Inside searchEvents')
   if (!event.queryStringParameters || !event.queryStringParameters.externalId)
     throw new BadRequestError(
       'externalId is required'
@@ -192,7 +188,6 @@ async function searchEvents(event: APIGatewayProxyEvent) {
   const perPage = +event.queryStringParameters.perPage || 50
   const externalId = event.queryStringParameters.externalId
 
-  console.log('before calling scanAll')
   let data = await scanAll(dynamodb)
   data = _.filter(data, e => externalId === e.externalId)
   const total = data.length
@@ -202,9 +197,7 @@ async function searchEvents(event: APIGatewayProxyEvent) {
   }
   //apply the pagination logic
   const results = data.slice((page - 1) * perPage, page * perPage)
-  console.log('before calling makeHeaders')
   const headers = makeHeaders(event, { total, page, perPage })
-  console.log('completed')
   return { header: headers, body: results }
 }
 
@@ -213,15 +206,12 @@ async function searchEvents(event: APIGatewayProxyEvent) {
  * @param event APIGatewayProxyEvent
  */
 async function deleteEvent(event: APIGatewayProxyEvent) {
-  console.log('Inside deleteEvent')
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
-  console.log('before calling _validateInput')
-  const input = await _validateInput(event.body);
+  const input = await _validateInput(event.body, true);
   const id = input.id;
   //delete event by id
-  console.log('before calling dynamodb.deleteItem')
 
   const res = await dynamodb.deleteItem({
     TableName: getDynamoTableName(),
@@ -236,14 +226,12 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
   await sfn.stopExecution({
     executionArn: _.toString(res.Attributes.executionArn.S)
   }, () => {}).promise()
-  console.log('completed!')
 }
 
 /**
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
-  console.log('Inside handler')
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
     return await processAPILambda(async () => createEvent(event));
   }
