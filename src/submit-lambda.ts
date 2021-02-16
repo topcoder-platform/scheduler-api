@@ -5,12 +5,18 @@
 import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
-import { processAPILambda, randomString } from './helper';
+// import { middleware} from 'tc-core-library-js';
+import { processAPILambda, randomString, makeHeaders, scanAll } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
-import { BadRequestError } from './errors';
+import { BadRequestError, NotFoundError } from './errors';
 import { getDynamoTableName, getStateMachineARN, getSwaggerPath } from './config';
+import _ from 'lodash';
 
-const dynamodb = new AWS.DynamoDB();
+// const authenticator = middleware.jwtAuthenticator;
+
+const dynamodb = new AWS.DynamoDB({
+  region: process.env.DYNAMODB_REGION
+});
 const sfn = new AWS.StepFunctions();
 const s3 = new AWS.S3();
 
@@ -31,19 +37,54 @@ function _isValidUrl(url: string) {
 }
 
 /**
+ * Bearer authentication check
+ * @param headers the headers
+ */
+// async function authCheck (headers: { [x: string]: string }) {
+//   return new Promise((resolve, reject) => {
+//     const res = {
+//       send: () => reject(new UnauthorizedError('Invalid or missing token'))
+//     }
+//     authenticator({
+//       AUTH_SECRET: getAuthSecret(),
+//       VALID_ISSUERS: getValidIssuers()
+//     })({ headers }, res, (req: any) => resolve(req.authUser))
+//   })
+// }
+
+/**
  * Check if request body is valid.
  * @param body the request body
  */
-function _validateInput(body: string | null) {
+async function _validateInput(body: string | null, isDelete?: boolean) {
   let input: InputData = null!;
   if (!body) {
     throw new BadRequestError('HTTP body must be defined');
   }
   try {
-    input = JSON.parse(body);
+    if (_.isString(body)) {
+      input = JSON.parse(body);
+    } else {
+      input = body
+    }
   } catch (e) {
     throw new BadRequestError('Invalid JSON body');
   }
+  if (isDelete) {
+    if (!input.id) {
+      throw new BadRequestError('id is invalid');
+    }
+    return input;
+  }
+  // if (input.headers) {
+  //   const authRes:any = await authCheck(input.headers)
+  //   if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
+  //     throw new ForbiddenError('You are not allowed to perform this operation')
+  //   } else if (!hasAdminRole(authRes.authUser)) {
+  //     throw new ForbiddenError('You are not allowed to perform this operation')
+  //   }
+  // } else
+  //   throw new UnauthorizedError('Authentication is required')
   if (!input.url) {
     throw new BadRequestError('url is required');
   }
@@ -55,10 +96,7 @@ function _validateInput(body: string | null) {
   }
   const allowedMethods = ['get', 'put', 'post', 'delete', 'patch'];
   if (!allowedMethods.includes(input.method)) {
-    throw new BadRequestError(
-      `method '${
-        input.method
-      }' is not invalid. Allowed values: ${allowedMethods.join(', ')}.`
+    throw new BadRequestError(`method '${input.method}' is not valid. Allowed values: ${allowedMethods.join(', ')}.`
     );
   }
   if (input.payload != null && typeof input.payload !== 'string') {
@@ -103,34 +141,91 @@ function _validateInput(body: string | null) {
  * Submit schedule event.
  * @param event APIGatewayProxyEvent
  */
-async function submitEvent(event: APIGatewayProxyEvent) {
+async function createEvent(event: APIGatewayProxyEvent) {
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
-  const input = _validateInput(event.body);
+  const input = await _validateInput(event.body);
   const id = randomString(20);
   input.id = id;
   const serialized = JSON.stringify(input);
 
-  await dynamodb
-    .putItem({
-      TableName: getDynamoTableName(),
-      Item: {
-        id: { S: id },
-        input: { S: serialized },
-      },
-    })
-    .promise();
-
-  await sfn
+  const dynamoObj:any = {
+    id: { S: id },
+    input: { S: serialized }
+  };
+  if (input.externalId) {
+    dynamoObj.externalId = { S: input.externalId };
+  }
+  //register event for create
+  const res = await sfn
     .startExecution({
-      name: id,
       input: serialized,
       stateMachineArn: getStateMachineARN(),
     })
     .promise();
+  dynamoObj.executionArn = { S: res.executionArn };
+  await dynamodb
+    .putItem({
+      TableName: getDynamoTableName(),
+      Item: dynamoObj,
+    })
+    .promise();
+  return { body: { id: id } };
+}
 
-  return { id };
+/**
+ * Get schedule event.
+ * @param event APIGatewayProxyEvent
+ */
+async function searchEvents(event: APIGatewayProxyEvent) {
+  if (!event.queryStringParameters || !event.queryStringParameters.externalId)
+    throw new BadRequestError(
+      'externalId is required'
+    );
+  //page parameters for pagination
+  const page = +event.queryStringParameters.page || 1
+  const perPage = +event.queryStringParameters.perPage || 50
+  const externalId = event.queryStringParameters.externalId
+
+  let data = await scanAll(dynamodb)
+  data = _.filter(data, e => externalId === e.externalId)
+  const total = data.length
+  //return 404 if event not exists
+  if (total == 0) {
+    throw new NotFoundError('schedule with the given id is not found.');
+  }
+  //apply the pagination logic
+  const results = data.slice((page - 1) * perPage, page * perPage)
+  const headers = makeHeaders(event, { total, page, perPage })
+  return { header: headers, body: results }
+}
+
+/**
+ * Delete schedule event.
+ * @param event APIGatewayProxyEvent
+ */
+async function deleteEvent(event: APIGatewayProxyEvent) {
+  if (event.isBase64Encoded) {
+    throw new BadRequestError('Binary data not supported.');
+  }
+  const input = await _validateInput(event.body, true);
+  const id = input.id;
+  //delete event by id
+
+  const res = await dynamodb.deleteItem({
+    TableName: getDynamoTableName(),
+    Key: {
+      id: { S: id },
+    },
+    ReturnValues: 'ALL_OLD'
+  }).promise();
+  //return 404 if event not exists
+  if (res.Attributes == null)
+    throw new NotFoundError('event to delete is not found.');
+  await sfn.stopExecution({
+    executionArn: _.toString(res.Attributes.executionArn.S)
+  }, () => {}).promise()
 }
 
 /**
@@ -138,7 +233,13 @@ async function submitEvent(event: APIGatewayProxyEvent) {
  */
 export async function handler(event: APIGatewayProxyEvent) {
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
-    return await processAPILambda(async () => submitEvent(event));
+    return await processAPILambda(async () => createEvent(event));
+  }
+  if (event.path === '/v5/schedules' && event.httpMethod === 'GET') {
+    return await processAPILambda(async () => searchEvents(event));
+  }
+  if (event.path === '/v5/schedules' && event.httpMethod === 'DELETE') {
+    return await processAPILambda(async () => deleteEvent(event));
   }
   if (event.path === '/v5/schedules/docs' && event.httpMethod === 'GET') {
     const data = await s3.getObject(getSwaggerPath()).promise()
@@ -155,7 +256,7 @@ export async function handler(event: APIGatewayProxyEvent) {
         statusCode: 200,
         body: JSON.stringify({ checksRun: 1 })
       }
-    }catch (e) {
+    } catch (e) {
       return {
         statusCode: 500,
         body: JSON.stringify({ error: e.message })

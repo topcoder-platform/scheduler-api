@@ -18,3 +18,27 @@ export class BadRequestError extends HttpError {
     super(400, message);
   }
 }
+/**
+ * Unauthorized Request HTTP 400 Error.
+ */
+export class UnauthorizedError extends HttpError {
+  constructor(message: string, public params?: any) {
+    super(401, message);
+  }
+}
+/**
+ * Forbidden Request HTTP 400 Error.
+ */
+export class ForbiddenError extends HttpError {
+  constructor(message: string, public params?: any) {
+    super(403, message);
+  }
+}
+/**
+ * Not Found HTTP 404 Error.
+ */
+export class NotFoundError extends HttpError {
+  constructor(message: string, public params?: any) {
+    super(404, message);
+  }
+}

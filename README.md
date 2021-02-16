@@ -1,3 +1,4 @@
+
 # Topcoder AutoPilot - Schedule API
 
 This API is part of the Scheduler Processor -> Schedule API -> Schedule Executor triage of modules. This module is responsible to create the events in AWS Step functions, which are later executed by the [Executor](https://github.com/topcoder-platform/schedule-executor)
@@ -18,9 +19,12 @@ Dev: [![CircleCI](https://circleci.com/gh/topcoder-platform/scheduler-api/tree/d
 
 ## Environment Variables
 
-TABLE_NAME: The name of the dynamodb table  
-STATE_MACHINE_ARN: The ARN of the [schedule executor](https://github.com/topcoder-platform/schedule-executor)
-S3_BUCKET: The bucket name of the swagger file
+- `TABLE_NAME`: The name of the dynamodb table  
+- `STATE_MACHINE_ARN:` The ARN of the [schedule executor](https://github.com/topcoder-platform/schedule-executor)
+- `S3_BUCKET`: The bucket name of the swagger file
+- `LAMBDA_ROLE`: Lambda function's execution role
+- `REGION` : Region name where API will run.
+- `DYNAMODB_REGION`: Region name where Dynamodb will run.
 
 *Note:* Create a .env file in root folder then add these three configs.
 

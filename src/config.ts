@@ -33,3 +33,53 @@ export function getSwaggerPath(): GetObjectRequest {
   }
   return { Bucket: process.env.S3_BUCKET || '', Key: 'swagger.yaml' };
 }
+
+/**
+ * Get API Base URL
+ */
+export function getAPIBaseURL() {
+  if (!process.env.API_BASE_URL) {
+    throw new Error('API_BASE_URL is not defined');
+  }
+  return process.env.API_BASE_URL;
+}
+
+/**
+ * Get API Base URL
+ */
+export function getDynamoRegion() {
+  if (!process.env.DYNAMODB_REGION) {
+    throw new Error('DYNAMODB_REGION is not defined');
+  }
+  return process.env.DYNAMODB_REGION;
+}
+
+/**
+ * Get VALID_ISSUERS
+ */
+export function getValidIssuers() {
+  if (!process.env.VALID_ISSUERS) {
+    throw new Error('VALID_ISSUERS is not defined');
+  }
+  return process.env.VALID_ISSUERS;
+}
+
+/**
+ * Get AUTH_SECRET
+ */
+export function getAuthSecret() {
+  if (!process.env.AUTH_SECRET) {
+    throw new Error('AUTH_SECRET is not defined');
+  }
+  return process.env.AUTH_SECRET;
+}
+
+/**
+ * Get Scopes
+ */
+export function getAllowedScopes() {
+  if (!process.env.VALID_SCOPES) {
+    return ['schedules:all']
+  }
+  return process.env.VALID_SCOPES.split(',');
+}
