@@ -38,18 +38,23 @@ functions:
       - http:
           path: v5/schedules
           method: post
+          cors: true
       - http:
           path: v5/schedules
           method: get
+          cors: true
       - http:
           path: v5/schedules
           method: delete
+          cors: true
       - http:
           path: v5/schedules/docs
           method: get
+          cors: true
       - http:
           path: v5/schedules/health
           method: get
+          cors: true
     environment:
       TABLE_NAME: ${env:TABLE_NAME}
       STATE_MACHINE_ARN: ${env:STATE_MACHINE_ARN}

@@ -73,10 +73,17 @@ export async function processAPILambda(fn: () => Promise<any>) {
   try {
     const result = await fn();
     const response:any = {
-      statusCode: 200
+      statusCode: 200,
+      headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+      }
     };
     if (_.get(result, 'header'))
-      response.headers = result.header;
+      response.headers = {
+        ...response.headers,
+        ...result.header
+      };
     if (_.get(result, 'body'))
       response.body = JSON.stringify(result.body);
     return response;
@@ -85,6 +92,10 @@ export async function processAPILambda(fn: () => Promise<any>) {
     console.error(e);
     return {
       statusCode: e.statusCode || 500,
+      headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+      },
       body: JSON.stringify({
         error: e.message,
       }),
