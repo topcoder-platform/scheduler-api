@@ -44,7 +44,9 @@ async function authCheck (headers: { [x: string]: string }) {
   return new Promise((resolve, reject) => {
     const res = {
       send: () => reject(new UnauthorizedError('Invalid or missing token')),
-      status: _.noop
+      status: () => ({
+        json: () => reject(new UnauthorizedError('Invalid or missing token'))
+      })
     }
     authenticator({
       AUTH_SECRET: getAuthSecret(),
