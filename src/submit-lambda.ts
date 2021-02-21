@@ -43,7 +43,8 @@ function _isValidUrl(url: string) {
 async function authCheck (headers: { [x: string]: string }) {
   return new Promise((resolve, reject) => {
     const res = {
-      send: () => reject(new UnauthorizedError('Invalid or missing token'))
+      send: () => reject(new UnauthorizedError('Invalid or missing token')),
+      status: _.noop
     }
     authenticator({
       AUTH_SECRET: getAuthSecret(),
