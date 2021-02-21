@@ -154,7 +154,7 @@ function getPageLink(req: APIGatewayProxyEvent, page: number) {
 export function hasAdminRole (authUser:any) {
   if (authUser && authUser.roles) {
     for (let i = 0; i < authUser.roles.length; i++) {
-      if (authUser.roles[i].toLowerCase() === 'admin') {
+      if (authUser.roles[i].toLowerCase() === 'administrator') {
         return true
       }
     }
