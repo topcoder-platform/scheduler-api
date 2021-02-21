@@ -152,8 +152,10 @@ async function createEvent(event: APIGatewayProxyEvent, context:any) {
 /**
  * Get schedule event.
  * @param event APIGatewayProxyEvent
+ * @param context the context
  */
-async function searchEvents(event: APIGatewayProxyEvent) {
+async function searchEvents(event: APIGatewayProxyEvent, context:any) {
+  await authCheck(event, context);
   if (!event.queryStringParameters || !event.queryStringParameters.externalId)
     throw new BadRequestError(
       'externalId is required'
@@ -213,7 +215,7 @@ export async function handler(event: APIGatewayProxyEvent, context: any,) {
     return await processAPILambda(async () => createEvent(event, context));
   }
   if (event.path === '/v5/schedules' && event.httpMethod === 'GET') {
-    return await processAPILambda(async () => searchEvents(event));
+    return await processAPILambda(async () => searchEvents(event, context));
   }
   if (event.path === '/v5/schedules' && event.httpMethod === 'DELETE') {
     return await processAPILambda(async () => deleteEvent(event, context));
