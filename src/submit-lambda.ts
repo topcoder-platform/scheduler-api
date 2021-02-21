@@ -226,7 +226,6 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
-  let authUser:any
   try {
     if (event.headers) {
       const reqObj = {
@@ -234,9 +233,11 @@ export async function handler(event: APIGatewayProxyEvent) {
           authorization: event.headers.Authorization || event.headers.authorization
         }
       }
-      authUser = await authCheck(reqObj)
-      if (authUser.isMachine && _.intersection(authUser.scopes, getAllowedScopes()).length === 0) {
-        throw new ForbiddenError('You are not allowed to perform this operation')
+      const authUser:any = await authCheck(reqObj)
+      if (authUser.isMachine) {
+        if (_.intersection(authUser.scopes, getAllowedScopes()).length === 0) {
+          throw new ForbiddenError('You are not allowed to perform this operation')
+        }
       } else if (!hasAdminRole(authUser)) {
         throw new ForbiddenError('You are not allowed to perform this operation')
       }
@@ -245,7 +246,7 @@ export async function handler(event: APIGatewayProxyEvent) {
   } catch (e) {
     return {
       statusCode: e.statusCode,
-      body: JSON.stringify({ error: e.message, authUser })
+      body: JSON.stringify({ error: e.message })
     }
   }
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
