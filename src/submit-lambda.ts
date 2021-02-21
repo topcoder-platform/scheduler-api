@@ -235,7 +235,10 @@ export async function handler(event: APIGatewayProxyEvent) {
         throw new ForbiddenError('You are not allowed to perform this operation')
       }
     } catch (e) {
-      throw new UnauthorizedError('Invalid or missing token')
+      return {
+        statusCode: e.statusCode,
+        body: JSON.stringify({ error: e.message })
+      }
     }
   } else
     throw new UnauthorizedError('Authentication is required')
