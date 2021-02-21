@@ -228,7 +228,7 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
 export async function handler(event: APIGatewayProxyEvent) {
   try {
     if (event.headers) {
-      const authRes:any = await authCheck(event.headers)
+      const authRes:any = await authCheck({ authorization: event.headers.Authorization || event.headers.authorization})
       if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
         throw new ForbiddenError('You are not allowed to perform this operation')
       } else if (!hasAdminRole(authRes.authUser)) {
@@ -239,7 +239,7 @@ export async function handler(event: APIGatewayProxyEvent) {
   } catch (e) {
     return {
       statusCode: e.statusCode,
-      body: JSON.stringify({ error: e.message, event })
+      body: JSON.stringify({ error: e.message })
     }
   }
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
