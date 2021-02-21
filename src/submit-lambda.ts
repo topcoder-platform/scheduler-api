@@ -5,12 +5,14 @@
 import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
-import { processAPILambda, randomString, makeHeaders, scanAll } from './helper';
+import tcCoreLib from 'tc-core-library-js';
+import { processAPILambda, randomString, makeHeaders, scanAll, hasAdminRole } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
-import { BadRequestError, NotFoundError } from './errors';
-import { getDynamoTableName, getStateMachineARN, getSwaggerPath } from './config';
+import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from './errors';
+import { getAllowedScopes, getAuthSecret, getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers } from './config';
 import _ from 'lodash';
-import { authCheck } from './authcheck';
+
+const authenticator = tcCoreLib.middleware.jwtAuthenticator;
 
 const dynamodb = new AWS.DynamoDB({
   region: process.env.DYNAMODB_REGION
@@ -32,6 +34,22 @@ function _isValidUrl(url: string) {
   } catch (e) {
     return false;
   }
+}
+
+/**
+ * Bearer authentication check
+ * @param headers the headers
+ */
+async function authCheck (headers: { [x: string]: string }) {
+  return new Promise((resolve, reject) => {
+    const res = {
+      send: () => reject(new UnauthorizedError('Invalid or missing token'))
+    }
+    authenticator({
+      AUTH_SECRET: getAuthSecret(),
+      VALID_ISSUERS: getValidIssuers()
+    })({ headers }, res, (req: any) => resolve(req.authUser))
+  })
 }
 
 /**
@@ -113,13 +131,11 @@ async function _validateInput(body: string | null, isDelete?: boolean) {
 /**
  * Submit schedule event.
  * @param event APIGatewayProxyEvent
- * @param context the context
  */
-async function createEvent(event: APIGatewayProxyEvent, context:any) {
+async function createEvent(event: APIGatewayProxyEvent) {
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
-  await authCheck(event, context);
   const input = await _validateInput(event.body);
   const id = randomString(20);
   input.id = id;
@@ -152,10 +168,8 @@ async function createEvent(event: APIGatewayProxyEvent, context:any) {
 /**
  * Get schedule event.
  * @param event APIGatewayProxyEvent
- * @param context the context
  */
-async function searchEvents(event: APIGatewayProxyEvent, context:any) {
-  await authCheck(event, context);
+async function searchEvents(event: APIGatewayProxyEvent) {
   if (!event.queryStringParameters || !event.queryStringParameters.externalId)
     throw new BadRequestError(
       'externalId is required'
@@ -181,13 +195,11 @@ async function searchEvents(event: APIGatewayProxyEvent, context:any) {
 /**
  * Delete schedule event.
  * @param event APIGatewayProxyEvent
- * @param context the context
  */
-async function deleteEvent(event: APIGatewayProxyEvent, context:any) {
+async function deleteEvent(event: APIGatewayProxyEvent) {
   if (event.isBase64Encoded) {
     throw new BadRequestError('Binary data not supported.');
   }
-  await authCheck(event, context);
   const input = await _validateInput(event.body, true);
   const id = input.id;
   //delete event by id
@@ -210,15 +222,24 @@ async function deleteEvent(event: APIGatewayProxyEvent, context:any) {
 /**
  * Main lambda handler for submitting.
  */
-export async function handler(event: APIGatewayProxyEvent, context: any,) {
+export async function handler(event: APIGatewayProxyEvent) {
+  if (event.headers) {
+    const authRes:any = await authCheck(event.headers)
+    if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
+      throw new ForbiddenError('You are not allowed to perform this operation')
+    } else if (!hasAdminRole(authRes.authUser)) {
+      throw new ForbiddenError('You are not allowed to perform this operation')
+    }
+  } else
+    throw new UnauthorizedError('Authentication is required')
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
-    return await processAPILambda(async () => createEvent(event, context));
+    return await processAPILambda(async () => createEvent(event));
   }
   if (event.path === '/v5/schedules' && event.httpMethod === 'GET') {
-    return await processAPILambda(async () => searchEvents(event, context));
+    return await processAPILambda(async () => searchEvents(event));
   }
   if (event.path === '/v5/schedules' && event.httpMethod === 'DELETE') {
-    return await processAPILambda(async () => deleteEvent(event, context));
+    return await processAPILambda(async () => deleteEvent(event));
   }
   if (event.path === '/v5/schedules/docs' && event.httpMethod === 'GET') {
     const data = await s3.getObject(getSwaggerPath()).promise()

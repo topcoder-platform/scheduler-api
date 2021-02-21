@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import _ from 'lodash';
 import querystring from 'querystring';
 import { APIGatewayProxyEvent } from './types';
-import { getAPIBaseURL, getDynamoTableName } from './config';
+import { getAllowedRoles, getAPIBaseURL, getDynamoTableName } from './config';
 import AWS from 'aws-sdk';
 
 /**
@@ -154,42 +154,10 @@ function getPageLink(req: APIGatewayProxyEvent, page: number) {
 export function hasAdminRole (authUser:any) {
   if (authUser && authUser.roles) {
     for (let i = 0; i < authUser.roles.length; i++) {
-      if (authUser.roles[i].toLowerCase() === 'administrator') {
+      if (getAllowedRoles().includes(authUser.roles[i].toLowerCase())) {
         return true
       }
     }
   }
-  return false
-}
-
-/**
- * Check if exists.
- *
- * @param {Array} source the array in which to search for the term
- * @param {Array | String} term the term to search
- */
-export function checkIfExists (source:any, term:any) {
-  let terms
-
-  if (!_.isArray(source)) {
-    return false;
-  }
-
-  source = source.map(s => s.toLowerCase())
-
-  if (_.isString(term)) {
-    terms = term.split(' ')
-  } else if (_.isArray(term)) {
-    terms = term.map(t => t.toLowerCase())
-  } else {
-    return false;
-  }
-
-  for (let i = 0; i < terms.length; i++) {
-    if (source.includes(terms[i])) {
-      return true
-    }
-  }
-
   return false
 }
