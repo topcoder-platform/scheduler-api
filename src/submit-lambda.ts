@@ -183,7 +183,7 @@ async function searchEvents(event: APIGatewayProxyEvent) {
   const externalId = event.queryStringParameters.externalId
 
   let data = await scanAll(dynamodb)
-  data = _.filter(data, e => externalId === e.externalId)
+  data = _.uniqBy(_.filter(data, e => externalId === e.externalId), 'id')
   const total = data.length
   //return 404 if event not exists
   if (total == 0) {
