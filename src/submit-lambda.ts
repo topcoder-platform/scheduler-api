@@ -226,22 +226,22 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
-  if (event.headers) {
-    try {
+  try {
+    if (event.headers) {
       const authRes:any = await authCheck(event.headers)
       if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
         throw new ForbiddenError('You are not allowed to perform this operation')
       } else if (!hasAdminRole(authRes.authUser)) {
         throw new ForbiddenError('You are not allowed to perform this operation')
       }
-    } catch (e) {
-      return {
-        statusCode: e.statusCode,
-        body: JSON.stringify({ error: e.message })
-      }
+    } else
+      throw new UnauthorizedError('Authentication is required')
+  } catch (e) {
+    return {
+      statusCode: e.statusCode,
+      body: JSON.stringify({ error: e.message, event })
     }
-  } else
-    throw new UnauthorizedError('Authentication is required')
+  }
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
     return await processAPILambda(async () => createEvent(event));
   }
