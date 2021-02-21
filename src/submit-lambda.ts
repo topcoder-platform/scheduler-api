@@ -38,9 +38,9 @@ function _isValidUrl(url: string) {
 
 /**
  * Bearer authentication check
- * @param headers the headers
+ * @param req the request object
  */
-async function authCheck (headers: { [x: string]: string }) {
+async function authCheck (req: any) {
   return new Promise((resolve, reject) => {
     const res = {
       send: () => reject(new UnauthorizedError('Invalid or missing token')),
@@ -51,7 +51,7 @@ async function authCheck (headers: { [x: string]: string }) {
     authenticator({
       AUTH_SECRET: getAuthSecret(),
       VALID_ISSUERS: getValidIssuers()
-    })({ headers }, res, (req: any) => resolve(req.authUser))
+    })(req, res, () => resolve(req.authUser))
   })
 }
 
@@ -228,7 +228,12 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
 export async function handler(event: APIGatewayProxyEvent) {
   try {
     if (event.headers) {
-      const authRes:any = await authCheck({ authorization: event.headers.Authorization || event.headers.authorization})
+      const reqObj = {
+        headers: {
+          authorization: event.headers.Authorization || event.headers.authorization
+        }
+      }
+      const authRes:any = await authCheck(reqObj)
       if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
         throw new ForbiddenError('You are not allowed to perform this operation')
       } else if (!hasAdminRole(authRes.authUser)) {
