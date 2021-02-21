@@ -161,3 +161,35 @@ export function hasAdminRole (authUser:any) {
   }
   return false
 }
+
+/**
+ * Check if exists.
+ *
+ * @param {Array} source the array in which to search for the term
+ * @param {Array | String} term the term to search
+ */
+export function checkIfExists (source:any, term:any) {
+  let terms
+
+  if (!_.isArray(source)) {
+    return false;
+  }
+
+  source = source.map(s => s.toLowerCase())
+
+  if (_.isString(term)) {
+    terms = term.split(' ')
+  } else if (_.isArray(term)) {
+    terms = term.map(t => t.toLowerCase())
+  } else {
+    return false;
+  }
+
+  for (let i = 0; i < terms.length; i++) {
+    if (source.includes(terms[i])) {
+      return true
+    }
+  }
+
+  return false
+}
