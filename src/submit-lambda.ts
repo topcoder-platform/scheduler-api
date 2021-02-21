@@ -227,11 +227,15 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
  */
 export async function handler(event: APIGatewayProxyEvent) {
   if (event.headers) {
-    const authRes:any = await authCheck(event.headers)
-    if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
-      throw new ForbiddenError('You are not allowed to perform this operation')
-    } else if (!hasAdminRole(authRes.authUser)) {
-      throw new ForbiddenError('You are not allowed to perform this operation')
+    try {
+      const authRes:any = await authCheck(event.headers)
+      if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
+        throw new ForbiddenError('You are not allowed to perform this operation')
+      } else if (!hasAdminRole(authRes.authUser)) {
+        throw new ForbiddenError('You are not allowed to perform this operation')
+      }
+    } catch (e) {
+      throw new UnauthorizedError('Invalid or missing token')
     }
   } else
     throw new UnauthorizedError('Authentication is required')
