@@ -16,8 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.12.2",
     "millisecond": "^0.1.2",
-    "serverless-dynamodb-client": "0.0.2",
-    "tc-core-library-js": "github:appirio-tech/tc-core-library-js#v2.6.4"
+    "serverless-dynamodb-client": "0.0.2"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.0",
