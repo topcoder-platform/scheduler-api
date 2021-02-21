@@ -233,10 +233,10 @@ export async function handler(event: APIGatewayProxyEvent) {
           authorization: event.headers.Authorization || event.headers.authorization
         }
       }
-      const authRes:any = await authCheck(reqObj)
-      if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
+      const authUser:any = await authCheck(reqObj)
+      if (authUser.isMachine && _.intersection(authUser.scopes, getAllowedScopes()).length === 0) {
         throw new ForbiddenError('You are not allowed to perform this operation')
-      } else if (!hasAdminRole(authRes.authUser)) {
+      } else if (!hasAdminRole(authUser)) {
         throw new ForbiddenError('You are not allowed to perform this operation')
       }
     } else
