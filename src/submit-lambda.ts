@@ -99,16 +99,6 @@ async function _validateInput(body: string | null, isDelete?: boolean) {
   if (input.payload && input.method === 'get') {
     throw new BadRequestError('payload is not allowed for "get" method');
   }
-  if (input.headers != null) {
-    if (typeof input.headers !== 'object') {
-      throw new BadRequestError('headers must be an object');
-    }
-    Object.entries(input.headers).forEach(([key, value]) => {
-      if (typeof value !== 'string') {
-        throw new BadRequestError(`header value ${key} must be a string`);
-      }
-    });
-  }
 
   if (input.scheduleTime == null) {
     throw new BadRequestError('scheduleTime is required');
@@ -140,6 +130,8 @@ async function createEvent(event: APIGatewayProxyEvent) {
     throw new BadRequestError('Binary data not supported.');
   }
   const input = await _validateInput(event.body);
+  // make sure headers are not stored
+  _.unset(input, 'headers');
   const id = randomString(20);
   input.id = id;
   const serialized = JSON.stringify(input);
