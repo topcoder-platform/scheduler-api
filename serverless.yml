@@ -63,3 +63,4 @@ functions:
       AUTH_SECRET: ${env:AUTH_SECRET}
       VALID_ISSUERS: ${env:VALID_ISSUERS}
       VALID_SCOPES: ${env:VALID_SCOPES}
+      VALID_ROLES: ${env:VALID_ROLES}

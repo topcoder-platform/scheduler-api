@@ -79,7 +79,17 @@ export function getAuthSecret() {
  */
 export function getAllowedScopes() {
   if (!process.env.VALID_SCOPES) {
-    return ['schedules:all']
+    return ['all:schedules', 'create:schedules', 'read:schedules', 'delete:schedules']
   }
   return process.env.VALID_SCOPES.split(',');
+}
+
+/**
+ * Get allowed roles
+ */
+export function getAllowedRoles() {
+  if (!process.env.VALID_ROLES) {
+    return ['administrator']
+  }
+  return process.env.VALID_ROLES.split(',');
 }

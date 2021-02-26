@@ -5,14 +5,14 @@
 import { URL } from 'url';
 import AWS from 'aws-sdk';
 import { load } from 'js-yaml';
-// import { middleware} from 'tc-core-library-js';
-import { processAPILambda, randomString, makeHeaders, scanAll } from './helper';
+import tcCoreLib from 'tc-core-library-js';
+import { processAPILambda, randomString, makeHeaders, scanAll, hasAdminRole } from './helper';
 import { APIGatewayProxyEvent, InputData } from './types';
-import { BadRequestError, NotFoundError } from './errors';
-import { getDynamoTableName, getStateMachineARN, getSwaggerPath } from './config';
+import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from './errors';
+import { getAllowedScopes, getAuthSecret, getDynamoTableName, getStateMachineARN, getSwaggerPath, getValidIssuers } from './config';
 import _ from 'lodash';
 
-// const authenticator = middleware.jwtAuthenticator;
+const authenticator = tcCoreLib.middleware.jwtAuthenticator;
 
 const dynamodb = new AWS.DynamoDB({
   region: process.env.DYNAMODB_REGION
@@ -38,19 +38,22 @@ function _isValidUrl(url: string) {
 
 /**
  * Bearer authentication check
- * @param headers the headers
+ * @param req the request object
  */
-// async function authCheck (headers: { [x: string]: string }) {
-//   return new Promise((resolve, reject) => {
-//     const res = {
-//       send: () => reject(new UnauthorizedError('Invalid or missing token'))
-//     }
-//     authenticator({
-//       AUTH_SECRET: getAuthSecret(),
-//       VALID_ISSUERS: getValidIssuers()
-//     })({ headers }, res, (req: any) => resolve(req.authUser))
-//   })
-// }
+async function authCheck (req: any) {
+  return new Promise((resolve, reject) => {
+    const res = {
+      send: () => reject(new UnauthorizedError('Invalid or missing token')),
+      status: () => ({
+        json: () => reject(new UnauthorizedError('Invalid or missing token'))
+      })
+    }
+    authenticator({
+      AUTH_SECRET: getAuthSecret(),
+      VALID_ISSUERS: getValidIssuers()
+    })(req, res, () => resolve(req.authUser))
+  })
+}
 
 /**
  * Check if request body is valid.
@@ -76,15 +79,6 @@ async function _validateInput(body: string | null, isDelete?: boolean) {
     }
     return input;
   }
-  // if (input.headers) {
-  //   const authRes:any = await authCheck(input.headers)
-  //   if (authRes.authUser.isMachine && _.intersection(authRes.authUser.scopes, getAllowedScopes()).length === 0) {
-  //     throw new ForbiddenError('You are not allowed to perform this operation')
-  //   } else if (!hasAdminRole(authRes.authUser)) {
-  //     throw new ForbiddenError('You are not allowed to perform this operation')
-  //   }
-  // } else
-  //   throw new UnauthorizedError('Authentication is required')
   if (!input.url) {
     throw new BadRequestError('url is required');
   }
@@ -104,16 +98,6 @@ async function _validateInput(body: string | null, isDelete?: boolean) {
   }
   if (input.payload && input.method === 'get') {
     throw new BadRequestError('payload is not allowed for "get" method');
-  }
-  if (input.headers != null) {
-    if (typeof input.headers !== 'object') {
-      throw new BadRequestError('headers must be an object');
-    }
-    Object.entries(input.headers).forEach(([key, value]) => {
-      if (typeof value !== 'string') {
-        throw new BadRequestError(`header value ${key} must be a string`);
-      }
-    });
   }
 
   if (input.scheduleTime == null) {
@@ -146,6 +130,8 @@ async function createEvent(event: APIGatewayProxyEvent) {
     throw new BadRequestError('Binary data not supported.');
   }
   const input = await _validateInput(event.body);
+  // make sure headers are not stored
+  _.unset(input, 'headers');
   const id = randomString(20);
   input.id = id;
   const serialized = JSON.stringify(input);
@@ -189,7 +175,7 @@ async function searchEvents(event: APIGatewayProxyEvent) {
   const externalId = event.queryStringParameters.externalId
 
   let data = await scanAll(dynamodb)
-  data = _.filter(data, e => externalId === e.externalId)
+  data = _.uniqBy(_.filter(data, e => externalId === e.externalId), 'id')
   const total = data.length
   //return 404 if event not exists
   if (total == 0) {
@@ -232,6 +218,29 @@ async function deleteEvent(event: APIGatewayProxyEvent) {
  * Main lambda handler for submitting.
  */
 export async function handler(event: APIGatewayProxyEvent) {
+  try {
+    if (event.headers) {
+      const reqObj = {
+        headers: {
+          authorization: event.headers.Authorization || event.headers.authorization
+        }
+      }
+      const authUser:any = await authCheck(reqObj)
+      if (authUser.isMachine) {
+        if (_.intersection(authUser.scopes, getAllowedScopes()).length === 0) {
+          throw new ForbiddenError('You are not allowed to perform this operation')
+        }
+      } else if (!hasAdminRole(authUser)) {
+        throw new ForbiddenError('You are not allowed to perform this operation')
+      }
+    } else
+      throw new UnauthorizedError('Authentication is required')
+  } catch (e) {
+    return {
+      statusCode: e.statusCode,
+      body: JSON.stringify({ error: e.message })
+    }
+  }
   if (event.path === '/v5/schedules' && event.httpMethod === 'POST') {
     return await processAPILambda(async () => createEvent(event));
   }

@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import _ from 'lodash';
 import querystring from 'querystring';
 import { APIGatewayProxyEvent } from './types';
-import { getAPIBaseURL, getDynamoTableName } from './config';
+import { getAllowedRoles, getAPIBaseURL, getDynamoTableName } from './config';
 import AWS from 'aws-sdk';
 
 /**
@@ -154,7 +154,7 @@ function getPageLink(req: APIGatewayProxyEvent, page: number) {
 export function hasAdminRole (authUser:any) {
   if (authUser && authUser.roles) {
     for (let i = 0; i < authUser.roles.length; i++) {
-      if (authUser.roles[i].toLowerCase() === 'admin') {
+      if (getAllowedRoles().includes(authUser.roles[i].toLowerCase())) {
         return true
       }
     }
