@@ -25,11 +25,35 @@ Dev: [![CircleCI](https://circleci.com/gh/topcoder-platform/scheduler-api/tree/d
 - `LAMBDA_ROLE`: Lambda function's execution role
 - `REGION` : Region name where API will run.
 - `DYNAMODB_REGION`: Region name where Dynamodb will run.
-
-*Note:* Create a .env file in root folder then add these three configs.
+- `API_BASE_URL`: The API Base URL.
+- `AUTH_SECRET`: The authorization secret used during token verification.
+- `VALID_ISSUERS`: The valid issuers of tokens.
+- `VALID_SCOPES`: The valid scopes of tokens.
+- `VALID_ROLES`: The valid roles of tokens.
 
 ## Deploy
+- Make sure to use Node v10+ by command `node -v`. We recommend using [NVM](https://github.com/nvm-sh/nvm) to quickly switch to the right version:
 
+   ```bash
+   nvm use
+   ```
+- In the `scheduler-api` root directory create `.env` file with the next environment variables. **AUTH_SECRET, VALID_ISSUERS** should be shared with you on the forum.<br>
+   ```bash
+   LAMBDA_ROLE=
+   REGION=
+   DYNAMODB_REGION=
+   STATE_MACHINE_ARN=
+   S3_BUCKET=
+   API_BASE_URL=
+   AUTH_SECRET=
+   VALID_ISSUERS=
+   # below are optional
+   VALID_SCOPES=
+   VALID_ROLES=
+
+   ```
+    - Values from this file would be automatically used by `npm` commands.
+    - ⚠️ Never commit this file or its copy to the repository!
 ```bash
 npm install
 npm run deploy
