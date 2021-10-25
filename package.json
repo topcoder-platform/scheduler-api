@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.533.0",
+    "aws-sdk": "^2.1000.0",
     "js-yaml": "^4.0.0",
     "serverless-dynamodb-client": "0.0.2",
     "tc-core-library-js": "github:appirio-tech/tc-core-library-js#dev"
